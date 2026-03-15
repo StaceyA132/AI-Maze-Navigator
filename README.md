@@ -1,33 +1,34 @@
 # AI Maze Navigator
 
-A web-based pathfinding visualization tool that lets you build a maze, place obstacles, and watch an AI agent explore the grid using BFS, Dijkstra, or A*.
+A web-based pathfinding visualization demo built with vanilla HTML/CSS/JS. It lets you build a maze, place obstacles, and watch an AI agent explore the grid using BFS, Dijkstra, or A*.
 
-## Features
+## Features (What You Can Do)
 
-- 25×25 interactive grid
-- Draw walls by clicking and dragging
-- Move the start & goal nodes by dragging them
-- Run algorithms with animated exploration and path highlighting
-- Speed control slider
-- Maze generation button
-- Performance stats (nodes explored, path length, execution time)
+* **25×25 interactive grid**: the board is a 2D array of node objects. Each node tracks its `row/col`, `state` and a list of orthogonal neighbors.
+* **Wall editing**: click/drag to toggle walls (blocked nodes); drag start/goal to reposition them.
+* **Algorithms**: run BFS, Dijkstra, or A* and watch the exploration animate node-by-node.
+* **Speed control**: slider adjusts the delay used by `await sleep(ms)` in the algorithm loops.
+* **Maze builder**: creates randomized wall layouts and animates the wall build process.
+* **Statistics**: displays nodes explored, path length, execution time, and selected algorithm.
 
-## Getting Started
+## Getting Started (Run It)
 
-1. Open `index.html` in a browser (no build step required).
-2. Draw walls by clicking/dragging on the grid.
-3. Select an algorithm and click **Start**.
-4. Use **Reset** to clear exploration states.
-5. Use **Generate Maze** to create a random maze.
+1. Open `index.html` in a modern browser (no build step required).
+2. Click / drag on the grid to draw walls.
+3. Drag the start (blue) and goal (purple) nodes to reposition them.
+4. Select an algorithm and click **Start** to run the simulation.
+5. Use **Reset** to clear visited cells but keep walls.
+6. Use **Generate Maze** to randomly populate walls (animated build).
 
 ## Development
 
-No dependencies required. The project is plain HTML/CSS/JS.
+No dependencies required: this is a plain HTML/CSS/JavaScript demo that runs directly in the browser.
 
 ### Commit Style
-This repository uses simple, student-style commit messages like:
+The repo uses short, easy-to-read commits that describe one clear change per commit.
 
-- `add grid layout`
-- `implement bfs exploration`
-- `add dijkstra and a*`
-- `add maze generation and controls`
+Examples:
+* `add grid layout`
+* `implement bfs exploration`
+* `add dijkstra and a*`
+* `add maze generation and controls`
