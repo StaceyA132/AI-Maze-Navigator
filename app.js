@@ -17,6 +17,7 @@ const statTime = document.getElementById('statTime');
 const gridContainer = document.getElementById('gridContainer');
 
 let grid = [];
+let agentElement = null;
 let isDragging = false;
 let dragMode = null; // 'wall' | 'erase' | 'move-start' | 'move-goal'
 let mouseButton = 0;
@@ -26,6 +27,11 @@ let currentGoal = { ...GOAL_POS };
 function createGrid() {
   grid = [];
   gridContainer.innerHTML = '';
+
+  // Add an agent element to animate movement across the grid.
+  agentElement = document.createElement('div');
+  agentElement.classList.add('agent');
+  gridContainer.appendChild(agentElement);
 
   for (let row = 0; row < GRID_SIZE; row++) {
     const rowData = [];
@@ -57,8 +63,15 @@ function createGrid() {
 
   setNodeState(currentStart.row, currentStart.col, 'start');
   setNodeState(currentGoal.row, currentGoal.col, 'goal');
+  placeAgent(currentStart);
   updateStats();
   assignNeighbors();
+}
+
+function placeAgent(pos) {
+  if (!agentElement) return;
+  agentElement.style.gridRowStart = pos.row + 1;
+  agentElement.style.gridColumnStart = pos.col + 1;
 }
 
 function assignNeighbors() {
@@ -95,6 +108,7 @@ function resetGridStates() {
   }
   setNodeState(currentStart.row, currentStart.col, 'start');
   setNodeState(currentGoal.row, currentGoal.col, 'goal');
+  placeAgent(currentStart);
   updateStats();
 }
 
@@ -214,7 +228,7 @@ async function runAlgorithm() {
 
   if (result) {
     const path = reconstructPath(goalNode);
-    animatePath(path);
+    await animatePath(path);
     updateStats({ explored: result.explored, pathLength: path.length, time: duration });
   } else {
     updateStats({ explored: 0, pathLength: 0, time: duration });
@@ -363,9 +377,11 @@ async function runAStar(startNode, goalNode) {
 }
 
 async function animatePath(path) {
+  placeAgent(currentStart);
   for (const node of path) {
     if (node.state === 'start' || node.state === 'goal') continue;
     setNodeState(node.row, node.col, 'path');
+    placeAgent({ row: node.row, col: node.col });
     await sleep(getSpeedDelay());
   }
 }
@@ -394,17 +410,25 @@ function wireEvents() {
   });
 }
 
-function generateMaze() {
+async function generateMaze() {
   clearWalls();
   const rows = GRID_SIZE;
   const cols = GRID_SIZE;
-
+  // Animate maze generation to show wall placement
+  const cells = [];
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      if (Math.random() < 0.35 && !(r === currentStart.row && c === currentStart.col) && !(r === currentGoal.row && c === currentGoal.col)) {
-        setNodeState(r, c, 'wall');
+      if (r === currentStart.row && c === currentStart.col) continue;
+      if (r === currentGoal.row && c === currentGoal.col) continue;
+      if (Math.random() < 0.35) {
+        cells.push({ r, c });
       }
     }
+  }
+
+  for (const { r, c } of cells) {
+    setNodeState(r, c, 'wall');
+    await sleep(getSpeedDelay());
   }
 }
 
