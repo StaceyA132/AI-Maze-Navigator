@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Maze Navigator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>AI Maze Navigator</h1>
+    <p class="subtitle">Visualize pathfinding algorithms in a dynamic maze.</p>
+  </header>
+
+  <main class="app-main">
+    <section class="panel controls-panel">
+      <h2>Controls</h2>
+      <div class="control-row">
+        <label for="algorithmSelect">Algorithm</label>
+        <select id="algorithmSelect">
+          <option value="bfs">Breadth‑First Search</option>
+          <option value="dijkstra">Dijkstra</option>
+          <option value="astar">A*</option>
+        </select>
+      </div>
+
+      <div class="control-row">
+        <button id="startBtn" class="primary">Start</button>
+        <button id="resetBtn">Reset</button>
+        <button id="generateBtn">Generate Maze</button>
+      </div>
+
+      <div class="control-row">
+        <label for="speedRange">Speed</label>
+        <input id="speedRange" type="range" min="1" max="10" value="5" />
+        <span id="speedLabel">5</span>
+      </div>
+
+      <div class="stats">
+        <h3>Stats</h3>
+        <div class="stat-row"><span>Algorithm:</span> <span id="statAlgorithm">BFS</span></div>
+        <div class="stat-row"><span>Nodes Explored:</span> <span id="statExplored">0</span></div>
+        <div class="stat-row"><span>Path Length:</span> <span id="statPathLength">0</span></div>
+        <div class="stat-row"><span>Execution Time:</span> <span id="statTime">0ms</span></div>
+      </div>
+    </section>
+
+    <section class="panel grid-panel">
+      <div id="gridContainer" class="grid"></div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>Click cells to place/remove walls. Drag to draw. Move start/goal by dragging them.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
