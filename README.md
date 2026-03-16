@@ -81,11 +81,3 @@ No dependencies required: this is a plain HTML/CSS/JavaScript demo that runs dir
 
 No dependencies required: this is a plain HTML/CSS/JavaScript demo that runs directly in the browser.
 
-### Commit Style
-The repo uses short, easy-to-read commits that describe one clear change per commit.
-
-Examples:
-* `add grid layout`
-* `implement bfs exploration`
-* `add dijkstra and a*`
-* `add maze generation and controls`
