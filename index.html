@@ -25,10 +25,23 @@
       </div>
 
       <div class="control-row">
+        <label for="mazeSelect">Maze type</label>
+        <select id="mazeSelect">
+          <option value="random">Random</option>
+          <option value="recursiveDivision">Recursive division</option>
+          <option value="backtracker">Recursive backtracker</option>
+        </select>
+      </div>
+
+      <div class="control-row">
         <button id="startBtn" class="primary">Start</button>
+        <button id="pauseBtn" disabled>Pause</button>
         <button id="resetBtn">Reset</button>
         <button id="generateBtn">Generate Maze</button>
+        <button id="saveBtn">Save Maze</button>
+        <button id="loadBtn">Load Maze</button>
       </div>
+      <input id="loadInput" type="file" accept="application/json" style="display:none" />
 
       <div class="control-row">
         <label for="speedRange">Speed</label>

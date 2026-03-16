@@ -182,11 +182,11 @@ body {
 }
 
 .cell.visited {
-  background: rgba(48, 199, 255, 0.35);
+  background: hsl(calc(210 - var(--cost, 0) * 2), 80%, 50%);
 }
 
 .cell.frontier {
-  background: rgba(143, 108, 255, 0.35);
+  background: hsl(calc(260 - var(--cost, 0) * 2), 80%, 55%);
 }
 
 .cell.path {
