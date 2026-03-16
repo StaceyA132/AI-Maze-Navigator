@@ -7,6 +7,7 @@ const startBtn = document.getElementById('startBtn');
 const resetBtn = document.getElementById('resetBtn');
 const generateBtn = document.getElementById('generateBtn');
 const pauseBtn = document.getElementById('pauseBtn');
+const stopBtn = document.getElementById('stopBtn');
 const mazeSelect = document.getElementById('mazeSelect');
 const saveBtn = document.getElementById('saveBtn');
 const loadBtn = document.getElementById('loadBtn');
@@ -31,6 +32,7 @@ let currentGoal = { ...GOAL_POS };
 let isRunning = false;
 let isPaused = false;
 let runController = null;
+let runCancelled = false;
 
 function createGrid() {
   grid = [];
@@ -246,6 +248,11 @@ function createRunController() {
       listeners.add(cb);
       return () => listeners.delete(cb);
     },
+    cancel() {
+      runCancelled = true;
+      isPaused = false;
+      listeners.forEach((cb) => cb(isPaused));
+    },
   };
 }
 
@@ -261,6 +268,17 @@ function waitForUnpause() {
   });
 }
 
+function checkCancelled() {
+  if (!runCancelled) return false;
+  runCancelled = false;
+  isRunning = false;
+  isPaused = false;
+  pauseBtn.disabled = true;
+  stopBtn.disabled = true;
+  startBtn.disabled = false;
+  pauseBtn.textContent = 'Pause';
+  return true;
+}
 
 function getNodeFromElement(el) {
   if (!el || !el.classList.contains('cell')) return null;
@@ -337,8 +355,10 @@ async function runAlgorithm() {
   isPaused = false;
   pauseBtn.disabled = false;
   pauseBtn.textContent = 'Pause';
+  stopBtn.disabled = false;
   startBtn.disabled = true;
   runController = createRunController();
+  runCancelled = false;
 
   resetGridStates();
   const algorithm = algorithmSelect.value;
@@ -372,6 +392,7 @@ async function runAlgorithm() {
   isRunning = false;
   startBtn.disabled = false;
   pauseBtn.disabled = true;
+  stopBtn.disabled = true;
   pauseBtn.textContent = 'Pause';
 
   isRunning = false;
@@ -416,6 +437,7 @@ async function runBFS(startNode, goalNode) {
   let explored = 0;
 
   while (queue.length > 0) {
+    if (checkCancelled()) return null;
     const node = queue.shift();
     if (node === goalNode) {
       return { explored };
@@ -440,6 +462,7 @@ async function runBFS(startNode, goalNode) {
     }
 
     await sleep(getSpeedDelay());
+    if (checkCancelled()) return null;
   }
 
   return null;
@@ -453,6 +476,7 @@ async function runDijkstra(startNode, goalNode) {
   let explored = 0;
 
   while (open.size > 0) {
+    if (checkCancelled()) return null;
     const current = [...open].reduce((a, b) => (a.distance < b.distance ? a : b));
     open.delete(current);
 
@@ -480,6 +504,7 @@ async function runDijkstra(startNode, goalNode) {
     }
 
     await sleep(getSpeedDelay());
+    if (checkCancelled()) return null;
   }
 
   return null;
@@ -589,6 +614,11 @@ function wireEvents() {
     }
   });
 
+  stopBtn.addEventListener('click', () => {
+    if (!isRunning) return;
+    runController.cancel();
+    checkCancelled();
+  });
 
   startBtn.addEventListener('click', () => runAlgorithm());
   resetBtn.addEventListener('click', () => {
@@ -598,6 +628,7 @@ function wireEvents() {
     isPaused = false;
     pauseBtn.disabled = true;
     pauseBtn.textContent = 'Pause';
+    stopBtn.disabled = true;
     startBtn.disabled = false;
   });
   generateBtn.addEventListener('click', () => {
